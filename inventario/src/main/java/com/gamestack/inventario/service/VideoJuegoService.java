@@ -15,19 +15,19 @@ public class VideoJuegoService {
     @Autowired
     VideoJuegoRepository repo;
 
-    public List<VideoJuego> GetByPlataforma(String plataforma){
+    public List<VideoJuego> getByPlataforma(String plataforma){
         return  repo.findByPlataforma(plataforma);
     }
 
-    public Optional<VideoJuego> GetById(int id){
+    public Optional<VideoJuego> getById(int id){
         return repo.findById(id);
     }
 
-    public List<VideoJuego> GetAll(){
+    public List<VideoJuego> getAll(){
         return repo.findAll();
     }
 
-    public VideoJuego CreateVideojuego(VideoJuego videoJuego){
+    public VideoJuego createVideojuego(VideoJuego videoJuego){
         if(videoJuego.getStock() < 0){
             videoJuego.setStock(0);
         }
@@ -35,7 +35,7 @@ public class VideoJuegoService {
         return videoJuego;
     }
 
-    public boolean DeleteById(int id){
+    public boolean deleteById(int id){
         boolean deleted = false;
         if(repo.existsById(id)){
             repo.deleteById(id);

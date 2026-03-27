@@ -22,7 +22,7 @@ public class VideoJuegoController {
     @GetMapping("/plataforma/{nombre}")
     public ResponseEntity<List<VideoJuego>> getByPlataforma(@PathVariable String nombre){
         ResponseEntity <List<VideoJuego>> respuesta = ResponseEntity.notFound().build();
-        List<VideoJuego> target = service.GetByPlataforma(nombre);
+        List<VideoJuego> target = service.getByPlataforma(nombre);
         if(!target.isEmpty()){
             respuesta = ResponseEntity.ok(target);
         }
@@ -32,7 +32,7 @@ public class VideoJuegoController {
     @GetMapping("/{id}")
     public ResponseEntity<Optional<VideoJuego>> getById(@PathVariable int id){
         ResponseEntity<Optional<VideoJuego>> respuesta = ResponseEntity.notFound().build();
-        Optional<VideoJuego> target = service.GetById(id);
+        Optional<VideoJuego> target = service.getById(id);
         if(target.isPresent()){
             respuesta = ResponseEntity.ok(target);
         }
@@ -41,9 +41,9 @@ public class VideoJuegoController {
 
     @GetMapping
     public ResponseEntity<List<VideoJuego>> getAllVideoJuegos(){
-        List<VideoJuego> juegos = service.GetAll();
+        List<VideoJuego> juegos = service.getAll();
         ResponseEntity<List<VideoJuego>> respuesta = ResponseEntity.notFound().build();
-        if(juegos.isEmpty()){
+        if(!juegos.isEmpty()){
             respuesta = ResponseEntity.ok(juegos);
         }
         return respuesta;
@@ -51,13 +51,13 @@ public class VideoJuegoController {
 
     @PostMapping
     public ResponseEntity<VideoJuego> createVideoJuego(@RequestBody VideoJuego game){
-        VideoJuego newVideoJuego = service.CreateVideojuego(game);
+        VideoJuego newVideoJuego = service.createVideojuego(game);
         return new ResponseEntity<>(newVideoJuego, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteVideoJuego(@PathVariable int id){
-        boolean deleted = service.DeleteById(id);
+        boolean deleted = service.deleteById(id);
         ResponseEntity<Boolean> respuesta = ResponseEntity.notFound().build();
         if(deleted){
             respuesta = ResponseEntity.noContent().build();
