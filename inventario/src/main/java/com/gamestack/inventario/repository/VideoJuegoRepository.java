@@ -8,5 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface VideoJuegoRepository  extends JpaRepository<VideoJuego, Integer> {
-
+    public List<VideoJuego> findByPlataforma(String plataforma );
 }
