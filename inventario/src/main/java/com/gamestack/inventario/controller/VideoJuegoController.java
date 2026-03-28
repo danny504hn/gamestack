@@ -1,7 +1,9 @@
 package com.gamestack.inventario.controller;
 
+import com.gamestack.inventario.dto.VideoJuegoDTO;
 import com.gamestack.inventario.model.VideoJuego;
 import com.gamestack.inventario.service.VideoJuegoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +22,9 @@ public class VideoJuegoController {
 
 
     @GetMapping("/plataforma/{nombre}")
-    public ResponseEntity<List<VideoJuego>> getByPlataforma(@PathVariable String nombre){
-        ResponseEntity <List<VideoJuego>> respuesta = ResponseEntity.notFound().build();
-        List<VideoJuego> target = service.getByPlataforma(nombre);
+    public ResponseEntity<List<VideoJuegoDTO>> getByPlataforma(@PathVariable String nombre){
+        ResponseEntity <List<VideoJuegoDTO>> respuesta = ResponseEntity.notFound().build();
+        List<VideoJuegoDTO> target = service.getByPlataforma(nombre);
         if(!target.isEmpty()){
             respuesta = ResponseEntity.ok(target);
         }
@@ -30,19 +32,16 @@ public class VideoJuegoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<VideoJuego>> getById(@PathVariable int id){
-        ResponseEntity<Optional<VideoJuego>> respuesta = ResponseEntity.notFound().build();
-        Optional<VideoJuego> target = service.getById(id);
-        if(target.isPresent()){
-            respuesta = ResponseEntity.ok(target);
-        }
-        return respuesta;
+    public ResponseEntity<VideoJuegoDTO> getById(@PathVariable int id){
+        ResponseEntity<VideoJuegoDTO> respuesta = ResponseEntity.notFound().build();
+        VideoJuegoDTO target = service.getById(id);
+        return respuesta = ResponseEntity.ok(target);
     }
 
     @GetMapping
-    public ResponseEntity<List<VideoJuego>> getAllVideoJuegos(){
-        List<VideoJuego> juegos = service.getAll();
-        ResponseEntity<List<VideoJuego>> respuesta = ResponseEntity.notFound().build();
+    public ResponseEntity<List<VideoJuegoDTO>> getAllVideoJuegos(){
+        List<VideoJuegoDTO> juegos = service.getAll();
+        ResponseEntity<List<VideoJuegoDTO>> respuesta = ResponseEntity.notFound().build();
         if(!juegos.isEmpty()){
             respuesta = ResponseEntity.ok(juegos);
         }
@@ -50,8 +49,9 @@ public class VideoJuegoController {
     }
 
     @PostMapping
-    public ResponseEntity<VideoJuego> createVideoJuego(@RequestBody VideoJuego game){
-        VideoJuego newVideoJuego = service.createVideojuego(game);
+    public ResponseEntity<VideoJuegoDTO> createVideoJuego(@Valid @RequestBody VideoJuegoDTO game){
+
+        VideoJuegoDTO newVideoJuego = service.createVideojuego(game);
         return new ResponseEntity<>(newVideoJuego, HttpStatus.CREATED);
     }
 
