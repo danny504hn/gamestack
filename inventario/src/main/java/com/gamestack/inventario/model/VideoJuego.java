@@ -1,6 +1,5 @@
 package com.gamestack.inventario.model;
 
-import com.gamestack.inventario.dto.VideoJuegoDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
