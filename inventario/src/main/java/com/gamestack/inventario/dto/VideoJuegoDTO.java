@@ -4,9 +4,8 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
+
 @Data
 @NoArgsConstructor
 public class VideoJuegoDTO {
@@ -17,9 +16,11 @@ public class VideoJuegoDTO {
     @Size(min = 3, max = 100)
     private String titulo;
 
-    @Schema(description = "Plataforma en la que se encuentra el videojuego", example = "PC")
-    @NotBlank
-    private String plataforma;
+    @Schema(description = "Plataforma en la que se encuentra el videojuego", example = "1")
+    @NotNull
+    private Integer plataformaId;
+
+    private String plataformaNombre;
 
     @Schema(description = "Precio en euros del videojuego", example = "49.99")
     @Min(value=1)
@@ -33,10 +34,10 @@ public class VideoJuegoDTO {
     @NotNull
     private LocalDateTime fechaLanzamiento;
 
-    public VideoJuegoDTO(int id, String titulo, String plataforma, double precio, int stock, LocalDateTime fechaLanzamiento) {
-        this.id = id;
+    public VideoJuegoDTO(String titulo, Integer plataformaId, String plataformaNombre, double precio, int stock, LocalDateTime fechaLanzamiento) {
         this.titulo = titulo;
-        this.plataforma = plataforma;
+        this.plataformaId = plataformaId;
+        this.plataformaNombre = plataformaNombre;
         this.precio = precio;
         this.stock = stock;
         this.fechaLanzamiento = fechaLanzamiento;

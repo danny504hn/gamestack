@@ -1,11 +1,14 @@
 package com.gamestack.inventario.controller;
 
 import com.gamestack.inventario.dto.VideoJuegoDTO;
+import com.gamestack.inventario.model.Plataforma;
+import com.gamestack.inventario.service.PlataformaService;
 import com.gamestack.inventario.service.VideoJuegoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +18,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/videojuegos")
+@RequiredArgsConstructor
 public class VideoJuegoController {
-
-    @Autowired
-    private VideoJuegoService service;
-
+    private final VideoJuegoService service;
 
     @Operation(summary = "Obtener la lista de videojuegos segun la plataforma",description = "Recupera todos los videojuegos de X plataforma, si no existe devuelve  un 404")
     @ApiResponses(value ={

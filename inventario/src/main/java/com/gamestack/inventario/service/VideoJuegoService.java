@@ -1,5 +1,7 @@
 package com.gamestack.inventario.service;
 
+import com.gamestack.inventario.model.Plataforma;
+import com.gamestack.inventario.repository.PlataformaRepository;
 import com.gamestack.inventario.utils.Utils;
 import com.gamestack.inventario.dto.VideoJuegoDTO;
 import com.gamestack.inventario.exception.ResourceNotFoundException;
@@ -18,13 +20,15 @@ public class VideoJuegoService {
     private final VideoJuegoRepository repo;
     private final ModelMapper modelMapper;
     private final Utils utils;
+    private final PlataformaRepository repoPlataforma;
 
 
     public List<VideoJuegoDTO> getByPlataforma(String plataforma){
-        List<VideoJuego> juegos = repo.findByPlataforma(plataforma);
+        List<VideoJuego> juegos = repo.findByPlataformaNombre(plataforma);
 
         return utils.mapList(juegos,VideoJuegoDTO.class) ;
     }
+
 
     public VideoJuegoDTO getById(int id){
        VideoJuego target = repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("NO SE ENCONTRO EL JUEGO"));
@@ -40,7 +44,10 @@ public class VideoJuegoService {
         if(videoJuego.getStock() < 0){
             videoJuego.setStock(0);
         }
-        repo.save(modelMapper.map(videoJuego,VideoJuego.class));
+        Plataforma p = repoPlataforma.findById(videoJuego.getPlataformaId()).orElseThrow(() -> new ResourceNotFoundException("No se encontro la categoria"));
+        VideoJuego v = modelMapper.map(videoJuego,VideoJuego.class);
+        v.setPlataforma(p);
+        repo.save(v);
         return videoJuego;
     }
 
