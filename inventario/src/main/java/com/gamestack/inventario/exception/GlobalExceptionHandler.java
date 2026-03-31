@@ -1,20 +1,60 @@
 package com.gamestack.inventario.exception;
 
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
+
+import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler{
+
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<String> handleNotFound(ResourceNotFoundException exception){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorMessage handleNotFound(ResourceNotFoundException ex, WebRequest request){
+        log.error("Error: {}", ex.getMessage());
+        return new ErrorMessage(
+                HttpStatus.NOT_FOUND.value(),
+                LocalDateTime.now(),
+                "No se encontro",
+                request.getDescription(false)
+        );
+    }
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorMessage handleValidationException(MethodArgumentNotValidException ex, WebRequest request) {
+        log.error("Error: {}", ex.getMessage());
+        String errores = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                .collect(Collectors.joining(", "));
+        return new ErrorMessage(
+                HttpStatus.BAD_REQUEST.value(),
+                LocalDateTime.now(),
+                "Error de validacion " + "["+errores+"]",
+                request.getDescription(false)
+        );
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleValidationException(org.springframework.web.bind.MethodArgumentNotValidException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ERROR DE VALIDACION " + ex.getBindingResult().getFieldError().getDefaultMessage());
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorMessage globalExceptionHandler(Exception ex, WebRequest request) {
+        log.error("Error: {}", ex.getMessage());
+        return new ErrorMessage(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                LocalDateTime.now(),
+                "Error en el servidor",
+                request.getDescription(false)
+        );
     }
+
 }
