@@ -1,5 +1,7 @@
 package com.gamestack.inventario.service;
 
+import com.gamestack.inventario.exception.StockInsuficienteException;
+import com.gamestack.inventario.model.MovimientoStock;
 import com.gamestack.inventario.model.Plataforma;
 import com.gamestack.inventario.repository.PlataformaRepository;
 import com.gamestack.inventario.utils.Utils;
@@ -7,10 +9,14 @@ import com.gamestack.inventario.dto.VideoJuegoDTO;
 import com.gamestack.inventario.exception.ResourceNotFoundException;
 import com.gamestack.inventario.model.VideoJuego;
 import com.gamestack.inventario.repository.VideoJuegoRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -48,7 +54,7 @@ public class VideoJuegoService {
         VideoJuego v = modelMapper.map(videoJuego,VideoJuego.class);
         v.setPlataforma(p);
         repo.save(v);
-        return videoJuego;
+        return modelMapper.map(videoJuego,VideoJuegoDTO.class);
     }
 
     public boolean deleteById(int id){
@@ -59,4 +65,24 @@ public class VideoJuegoService {
         }
         return deleted;
     }
+
+    @Transactional
+    public VideoJuegoDTO modificarStock(Integer idJuego, int cantidad, String motivo){
+
+        VideoJuego target = repo.findById(idJuego)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("No se econtro el juego ")
+                );
+
+        int stockActual = target.getStock();
+        int newStock = stockActual + cantidad;
+        if(newStock < 0) throw new StockInsuficienteException("Stock insuficiente");
+        target.setStock(newStock);
+        MovimientoStock mS = new MovimientoStock(cantidad, LocalDateTime.now(), motivo);
+        target.addMovimiento(mS);
+        repo.save(target);
+
+        return modelMapper.map(target,VideoJuegoDTO.class);
+    }
+
 }

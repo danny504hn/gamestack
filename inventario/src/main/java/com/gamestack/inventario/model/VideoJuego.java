@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "videojuegos")
@@ -27,6 +28,11 @@ public class VideoJuego {
      @Column(name = "stock")
     private int stock;
 
+     @OneToMany(mappedBy = "videojuego",
+             cascade = CascadeType.ALL,
+             orphanRemoval = true)
+    private List<MovimientoStock> movimientos;
+
      @Column(name = "fecha_lanzamiento")
     private Date fechaLanzamiento;
 
@@ -37,5 +43,11 @@ public class VideoJuego {
         this.precio = precio;
         this.stock = stock;
         this.fechaLanzamiento = fechaLanzamiento;
+    }
+
+
+    public void addMovimiento(MovimientoStock m){
+         movimientos.add(m);
+         m.setVideojuego(this);
     }
 }

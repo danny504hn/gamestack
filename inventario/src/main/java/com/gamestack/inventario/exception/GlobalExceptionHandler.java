@@ -57,4 +57,18 @@ public class GlobalExceptionHandler{
         );
     }
 
+    @ExceptionHandler(StockInsuficienteException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorMessage handleInsuficientStock(Exception ex, WebRequest request){
+        log.error("Error: {} ", ex.getMessage());
+
+        return new ErrorMessage(
+                HttpStatus.BAD_REQUEST.value(),
+                LocalDateTime.now(),
+                "Stock Insuficiente",
+                request.getDescription(false)
+        );
+
+    }
+
 }

@@ -1,7 +1,9 @@
 package com.gamestack.inventario.controller;
 
+import com.gamestack.inventario.dto.StockRequestDTO;
 import com.gamestack.inventario.dto.VideoJuegoDTO;
 import com.gamestack.inventario.model.Plataforma;
+import com.gamestack.inventario.model.VideoJuego;
 import com.gamestack.inventario.service.PlataformaService;
 import com.gamestack.inventario.service.VideoJuegoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -89,4 +91,14 @@ public class VideoJuegoController {
         }
         return respuesta;
     }
+
+    @PostMapping("/{id}/stock")
+    public ResponseEntity<VideoJuegoDTO> updateStock(@PathVariable int id, @RequestBody @Valid StockRequestDTO stockRequest){
+
+        VideoJuegoDTO target = service.modificarStock(id,
+                stockRequest.getCantidad(),
+                stockRequest.getMotivo());
+        return ResponseEntity.ok(target);
+    }
+
 }
