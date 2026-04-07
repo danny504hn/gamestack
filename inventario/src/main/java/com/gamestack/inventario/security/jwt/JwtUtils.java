@@ -49,7 +49,6 @@ public class JwtUtils {
             valid = true;
         }catch (JwtException e){
             System.out.println("ERROR EN EL TOKEN {}" + e.getMessage());
-
         }
         return valid;
     }
