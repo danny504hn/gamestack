@@ -2,7 +2,9 @@ package com.gamestack.inventario.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.cglib.core.Local;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -34,10 +36,10 @@ public class VideoJuego {
     private List<MovimientoStock> movimientos;
 
      @Column(name = "fecha_lanzamiento")
-    private Date fechaLanzamiento;
+    private LocalDateTime fechaLanzamiento;
 
      public VideoJuego(){}
-    public VideoJuego( String titulo, Plataforma plataforma, double precio, int stock, Date fechaLanzamiento) {
+    public VideoJuego( String titulo, Plataforma plataforma, double precio, int stock, LocalDateTime fechaLanzamiento) {
         this.titulo = titulo;
         this.plataforma = plataforma;
         this.precio = precio;
