@@ -13,6 +13,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -28,14 +29,12 @@ public class VideoJuegoService {
     private final Utils utils;
     private final PlataformaRepository repoPlataforma;
 
-
+   @Cacheable(value = "videojuegoPlataforma", key = "#plataforma")
     public List<VideoJuegoDTO> getByPlataforma(String plataforma){
         List<VideoJuego> juegos = repo.findByPlataformaNombre(plataforma);
-
+        System.out.println("Usando DB");
         return utils.mapList(juegos,VideoJuegoDTO.class) ;
     }
-
-
     public VideoJuegoDTO getById(int id){
        VideoJuego target = repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("NO SE ENCONTRO EL JUEGO"));
        return modelMapper.map(target, VideoJuegoDTO.class);

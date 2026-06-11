@@ -4,11 +4,12 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
-public class VideoJuegoDTO {
+public class VideoJuegoDTO implements Serializable {
 
     private int id;
     @Schema(description = "Titulo principal del videojuego", example = "Age of Empires")
